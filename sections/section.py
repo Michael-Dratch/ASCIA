@@ -44,23 +44,27 @@ class Section(QFrame):
         header = self.createCenteredLabel(text)
         return header
 
-    def buildVerticalLabel(self, text):
+    def buildVerticalLabel(self, text, isNarrow=False):
         labelContainer = QWidget()
         layout = QHBoxLayout()
         labelContainer.setLayout(layout)
-        label = VerticalLabel(text)
+        label = VerticalLabel(text, isNarrow)
         layout.addWidget(label)
         return labelContainer
 
 
 class VerticalLabel(QWidget):
-    def __init__(self, text=None):
+    def __init__(self, text=None, isNarrow=False):
         super(self.__class__, self).__init__()
         self.text = text
+        self.narrow = isNarrow
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.translate(20, 100)
+        if self.narrow:
+            painter.translate(10, 90)
+        else:
+            painter.translate(20, 100)
         painter.rotate(-90)
         if self.text:
             painter.drawText(0, 0, self.text)

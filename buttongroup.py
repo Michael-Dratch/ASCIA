@@ -10,7 +10,7 @@ class ButtonGroup(QWidget):
         self.value = None
         self.initializeButtonGroup()
         self.BUTTON_SIZE = QSize(25, 25)
-        self.BUTTON_SIZE_LARGE = QSize(50, 25)
+        self.BUTTON_SIZE_LARGE = QSize(55, 25)
 
     def initializeButtonGroup(self):
         self.buttons = {}
@@ -32,6 +32,7 @@ class ButtonGroup(QWidget):
     def buildLeftRightButtonGroup(self):
         self.layout = QGridLayout()
         self.setLayout(self.layout)
+        self.layout.setContentsMargins(0, 0, 0, 0)
         leftButton = self.buildButton("L", SideType.LEFT, isDark=True)
         rightButton = self.buildButton("R", SideType.RIGHT)
         self.layout.addWidget(leftButton, 0, 0)
@@ -49,6 +50,7 @@ class ButtonGroup(QWidget):
     def buildAbdomenButtonGroup(self):
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
+        self.layout.setContentsMargins(0, 0, 0, 0)
         dragButton = self.buildButton("Drag", AbdomenType.DRAG)
         self.setButtonSize(dragButton, self.BUTTON_SIZE_LARGE)
         parallelButton = self.buildButton("Parallel", AbdomenType.PARALLEL)
@@ -69,6 +71,7 @@ class ButtonGroup(QWidget):
     def buildFrequencyButtonGroup(self, isDark=False):
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
+        self.layout.setContentsMargins(0, 0, 0, 0)
         neverButton = self.buildButton("Ø", FrequencyType.NEVER, isDark)
         occasionalButton = self.buildButton("O", FrequencyType.OCCASIONAL, isDark)
         frequentButton = self.buildButton("F", FrequencyType.FREQUENT, isDark)
@@ -82,12 +85,18 @@ class ButtonGroup(QWidget):
         self.buttons[FrequencyType.FREQUENT] = frequentButton
         self.buttons[FrequencyType.CONSISTENT] = consistentButton
 
-    def buildPawPositionButtonGroup(self):
+    def buildToeClearanceButtonGroup(self):
+        self.buildFrequencyButtonGroup()
+        frequentButton = self.layout.itemAt(2)
+        frequentButton = self.setT
+
+    def buildPawPositionButtonGroup(self, isDark=False):
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
-        internalButton = self.buildButton("I", PositionType.INTERNALROTATION)
-        externalButton = self.buildButton("E", PositionType.EXTERNALROTATION)
-        parallelButton = self.buildButton("P", PositionType.PARALLEL)
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        internalButton = self.buildButton("I", PositionType.INTERNALROTATION, isDark)
+        externalButton = self.buildButton("E", PositionType.EXTERNALROTATION, isDark)
+        parallelButton = self.buildButton("P", PositionType.PARALLEL, isDark)
         self.layout.addWidget(internalButton)
         self.layout.addWidget(externalButton)
         self.layout.addWidget(parallelButton)
@@ -98,12 +107,28 @@ class ButtonGroup(QWidget):
     def buildUpDownButtonGroup(self):
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
+        self.layout.setContentsMargins(0, 0, 0, 0)
         upButton = self.buildButton("Up", PositionType.UP)
+        self.setButtonSize(upButton, self.BUTTON_SIZE_LARGE)
         downButton = self.buildButton("Down", PositionType.DOWN)
+        self.setButtonSize(downButton, self.BUTTON_SIZE_LARGE)
         self.layout.addWidget(upButton)
         self.layout.addWidget(downButton)
         self.buttons[PositionType.UP] = upButton
         self.buttons[PositionType.DOWN] = downButton
+
+    def buildStabilityButtonGroup(self):
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        stableButton = self.buildButton("Stable", StabilityType.STABLE)
+        self.setButtonSize(stableButton, self.BUTTON_SIZE_LARGE)
+        unstableButton = self.buildButton("Unstable", StabilityType.UNSTABLE)
+        self.setButtonSize(unstableButton, self.BUTTON_SIZE_LARGE)
+        self.layout.addWidget(stableButton)
+        self.layout.addWidget(unstableButton)
+        self.buttons[StabilityType.STABLE] = stableButton
+        self.buttons[StabilityType.UNSTABLE] = unstableButton
 
     def buildButton(self, label, value, isDark=False):
         button = Button(label, isDark)
