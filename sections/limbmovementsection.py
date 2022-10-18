@@ -1,5 +1,3 @@
-from PyQt6.QtCore import Qt, QRect
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QGridLayout, QFrame
 from buttongroup import ButtonGroup
 from sections.section import Section
 
