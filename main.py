@@ -1,5 +1,7 @@
-from PyQt6.QtCore import QRect, Qt
 from PyQt6.QtWidgets import *
+from recorddata import RecordData
+from buttons import Button
+from buttongroup import ButtonGroup
 from sections.limbmovementsection import LimbMovementSection
 from sections.trunkpositionsection import TrunkPositionSection
 from sections.abdomensection import AbdomenSection
@@ -11,6 +13,7 @@ from sections.pawpositionsection import PawPositionSection
 from sections.instabilitysection import InstabilitySection
 from sections.tailSection import TailSection
 from sections.metadatasection import MetaDataSection
+from sections.key import Key
 
 
 class GUI:
@@ -38,51 +41,38 @@ class GUI:
         app.exec()
 
     def buildMainLayout(self):
-        self.initializeLayout()
-        self.buildSections()
+        self.initializeComponents()
         self.layoutSections()
-        metaDataSection = MetaDataSection()
-        sectionButtons = self.buildSectionButtonLayout()
-        self.buildSubmitButton()
-        key = self.buildKey()
-
-        self.mainLayout.addWidget(metaDataSection)
-        self.mainLayout.addLayout(self.layout)
-        self.mainLayout.addWidget(sectionButtons)
-        self.mainLayout.addWidget(key)
-
+        self.layoutFooter()
+        self.mainLayout.addWidget(self.metaDataSection)
+        self.mainLayout.addLayout(self.centerLayout)
+        self.mainLayout.addLayout(self.footer)
         self.window.setLayout(self.mainLayout)
 
-    def buildSectionButtonLayout(self):
-        sectionButtons = QWidget()
-        sectionButtons.setStyleSheet("""QPushButton:hover{background-color: #999}""")
-        layout = QHBoxLayout()
-        sectionButtons.setContentsMargins(0, 0, 0, 0)
-        layout.setContentsMargins(0, 0, 0, 0)
-        sectionButtons.setLayout(layout)
-        self.earlyPhaseButton = QPushButton("Section N/A")
-        self.earlyPhaseButton.setMinimumWidth(100)
-        self.intermediatePhaseButton = QPushButton("Section N/A")
-        self.intermediatePhaseButton.setMinimumWidth(100)
-        self.intermediatePhaseButton.setMaximumWidth(100)
-        self.latePhaseButton = QPushButton("Section N/A")
-        self.latePhaseButton.setMinimumWidth(100)
+    def initializeComponents(self):
+        self.initializeLayout()
+        self.initializeSectionToggleButtons()
+        self.buildSections()
+        self.metaDataSection = MetaDataSection()
+        self.initializeFooter()
 
-        layout.addWidget(self.earlyPhaseButton)
-        layout.setAlignment(self.earlyPhaseButton, Qt.AlignmentFlag.AlignLeft)
-        layout.addSpacerItem(QSpacerItem(45, 20))
-        layout.addWidget(self.intermediatePhaseButton)
+    def initializeFooter(self):
+        self.key = Key()
+        self.gradeSubmitButtons = ButtonGroup()
+        self.gradeSubmitButtons.buildGradeSubmitButtonGroup(None, self.submitClicked)
 
-        layout.addWidget(self.latePhaseButton)
-        layout.setAlignment(self.latePhaseButton, Qt.AlignmentFlag.AlignRight)
-        layout.addSpacerItem(QSpacerItem(200, 20))
-
-        return sectionButtons
+    def initializeSectionToggleButtons(self):
+        self.earlyPhaseButton = self.buildSectionToggleButton()
+        self.intermediatePhaseButton = self.buildSectionToggleButton()
+        self.latePhaseButton = self.buildSectionToggleButton()
 
     def initializeLayout(self):
         self.mainLayout = QVBoxLayout()
         self.mainLayout.setSpacing(0)
-        self.layout = QHBoxLayout()
+        self.centerLayout = QHBoxLayout()
+        self.earlyPhaseContainer = QGridLayout()
+        self.intermediatePhaseContainer = QGridLayout()
+        self.latePhaseContainer = QGridLayout()
 
     def buildSections(self):
         self.limbMovementSection = self.buildSection(LimbMovementSection(), 200, 250)
@@ -96,65 +86,107 @@ class GUI:
         self.instabilitySection = self.buildSection(InstabilitySection(), 100, 250)
         self.tailSection = self.buildSection(TailSection(), 100, 250)
 
+    def buildSectionToggleButton(self):
+        button = Button("Section N/A")
+        button.setMinimumWidth(100)
+        return button
+
     def layoutSections(self):
-        self.layout.addWidget(self.limbMovementSection)
-        self.layout.addWidget(self.trunkPositionSection)
-        self.layout.addWidget(self.abdomenSection)
-        self.layout.addWidget(self.buildSectionDivider())
-        self.layout.addWidget(self.pawPlacementSection)
-        self.layout.addWidget(self.steppingSection)
-        self.layout.addWidget(self.buildSectionDivider())
-        self.layout.addWidget(self.coordinationSection)
-        self.layout.addWidget(self.toeSection)
-        self.layout.addWidget(self.pawPositionSection)
-        self.layout.addWidget(self.instabilitySection)
-        self.layout.addWidget(self.tailSection)
+        self.layoutEarlySection()
+        self.layoutIntermediateSection()
+        self.layoutLateSection()
+        self.centerLayout.addLayout(self.earlyPhaseContainer)
+        self.centerLayout.addWidget(self.buildSectionDivider())
+        self.centerLayout.addLayout(self.intermediatePhaseContainer)
+        self.centerLayout.addWidget(self.buildSectionDivider())
+        self.centerLayout.addLayout(self.latePhaseContainer)
+
+    def layoutEarlySection(self):
+        self.earlyPhaseContainer.addWidget(self.limbMovementSection, 0, 0)
+        self.earlyPhaseContainer.addWidget(self.trunkPositionSection, 0, 1)
+        self.earlyPhaseContainer.addWidget(self.abdomenSection, 0, 2)
+        self.earlyPhaseContainer.addWidget(self.earlyPhaseButton, 1, 0)
+
+    def layoutIntermediateSection(self):
+        self.intermediatePhaseContainer.addWidget(self.pawPlacementSection, 0, 0)
+        self.intermediatePhaseContainer.addWidget(self.steppingSection, 0, 1)
+        self.intermediatePhaseContainer.addWidget(self.intermediatePhaseButton, 1, 0)
+
+    def layoutLateSection(self):
+        self.latePhaseContainer.addWidget(self.coordinationSection, 0, 0)
+        self.latePhaseContainer.addWidget(self.toeSection, 0, 1)
+        self.latePhaseContainer.addWidget(self.pawPositionSection, 0, 2)
+        self.latePhaseContainer.addWidget(self.instabilitySection, 0, 3)
+        self.latePhaseContainer.addWidget(self.tailSection, 0, 4)
+        self.latePhaseContainer.addWidget(self.latePhaseButton, 1, 0)
+
+    def layoutFooter(self):
+        self.footer = QHBoxLayout()
+        self.footer.addWidget(self.key)
+        self.footer.addWidget(self.gradeSubmitButtons)
 
     def buildSection(self, sectionObject, width, height):
-        section = sectionObject
-        section.setObjectName('section')
-        section.setMaximumSize(width, height)
-        return section
+        sectionObject.setObjectName('section')
+        sectionObject.setMaximumSize(width, height)
+        return sectionObject
 
     def buildSectionDivider(self):
         divider = QFrame()
         divider.setFrameStyle(QFrame.Shape.VLine | QFrame.Shadow.Plain)
-        divider.setMaximumSize(4, 250)
-        divider.setMinimumSize(4, 250)
+        divider.setMaximumSize(4, 270)
+        divider.setMinimumSize(4, 270)
         divider.setLineWidth(20)
         return divider
 
-    def buildKey(self):
-        key = QWidget()
-        key.setMaximumHeight(100)
-        keyLayout = QGridLayout()
-        key.setLayout(keyLayout)
-        keyLayout.addWidget(QLabel("Ø - No Movement"), 0, 0, 1, 1)
-        keyLayout.addWidget(QLabel("S - Slight Movement"), 1, 0, 1, 1)
-        keyLayout.addWidget(QLabel("E - Extensive Movement"), 2, 0, 1, 1)
-        keyLayout.addWidget(QLabel("Ø - Never        0%, *Clearance <= 5%"), 0, 1, 1, 1)
-        keyLayout.addWidget(QLabel("O - Occasional   <= 50%"), 1, 1, 1, 1)
-        keyLayout.addWidget(QLabel("F - Frequent   <= 51 - 94%%"), 2, 1, 1, 1)
-        keyLayout.addWidget(QLabel("C - Consistent   95 - 100%"), 3, 1, 1, 1)
-        keyLayout.addWidget(QLabel("+ D.Steps > 4/HL   **Toe Drags >4/HL"), 4, 1, 1, 1)
-        keyLayout.addWidget(QLabel("I - Internal Rotation"), 0, 2, 1, 1)
-        keyLayout.addWidget(QLabel("E - External Rotation"), 1, 2, 1, 1)
-        keyLayout.addWidget(QLabel("P - Parallel"), 2, 2, 1, 1)
-        keyLayout.setColumnStretch(0, 2)
-        keyLayout.setColumnStretch(1, 1)
-        keyLayout.setContentsMargins(10, 10, 10, 10)
+    def submitClicked(self):
+        self.buildRecordDataObject()
 
-        keyLayout.addWidget(self.submitButton, 0, 3, 2, 1)
-        return key
+    def buildRecordDataObject(self):
+        record = RecordData()
+        self.setRecordMetaData(record)
+        self.setEarlyPhaseData(record)
+        self.setIntermediatePhaseData(record)
+        self.setLatePhaseData(record)
+        print(record.toString())
 
-    def buildSubmitButton(self):
-        self.submitButton = QPushButton("Submit")
-        self.submitButton.setMinimumSize(60, 40)
-        self.submitButton.setStyleSheet("""
-                                        QPushButton:hover{
-                                        background-color: #999
-                                        }
-                                        """)
+    def setRecordMetaData(self, record):
+        record.ratNumber = self.metaDataSection.getRatNumber()
+        record.week = self.metaDataSection.getWeek()
+        record.date = self.metaDataSection.getDate()
+        record.tester = self.metaDataSection.getTester()
+        record.scoreLeft = self.metaDataSection.getLeftScore()
+        record.scoreRight = self.metaDataSection.getRightScore()
+
+    def setEarlyPhaseData(self, record):
+        record.leftHip = self.limbMovementSection.getLeftHip()
+        record.rightHip = self.limbMovementSection.getRightHip()
+        record.leftKnee = self.limbMovementSection.getLeftKnee()
+        record.rightKnee = self.limbMovementSection.getRightKnee()
+        record.leftAnkle = self.limbMovementSection.getLeftAnkle()
+        record.rightAnkle = self.limbMovementSection.getRightAnkle()
+        record.trunkSide = self.trunkPositionSection.getSide()
+        record.trunkProp = self.trunkPositionSection.getProp()
+        record.abdomen = self.abdomenSection.getAbdomen()
+
+    def setIntermediatePhaseData(self, record):
+        record.pawSweep = self.pawPlacementSection.getSweep()
+        record.pawWithoutSupp = self.pawPlacementSection.getWithOutSupport()
+        record.pawWithSupp = self.pawPlacementSection.getWithSupport()
+        record.steppingDorsalLeft = self.steppingSection.getLeftDorsal()
+        record.steppingDorsalRight = self.steppingSection.getRightDorsal()
+        record.steppingPlantarLeft = self.steppingSection.getLeftPlantar()
+        record.steppingPlantarRight = self.steppingSection.getRightPlantar()
+
+    def setLatePhaseData(self, record):
+        record.coordination = self.coordinationSection.getCoordination()
+        record.leftToe = self.toeSection.getLeftToe()
+        record.rightToe = self.toeSection.getRightToe()
+        record.initialContactLeft = self.pawPositionSection.getLeftInitialContact()
+        record.initialContactRight = self.pawPositionSection.getRightInitialContact()
+        record.liftOffLeft = self.pawPositionSection.getLeftLiftOff()
+        record.liftOffRight = self.pawPositionSection.getRightLiftOff()
+        record.trunkInstability = self.instabilitySection.getTrunkInstability()
+        record.tail = self.tailSection.getTail()
 
 
 if __name__ == "__main__":

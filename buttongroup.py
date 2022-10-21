@@ -7,7 +7,7 @@ from datatypes import *
 class ButtonGroup(QWidget):
     def __init__(self):
         super().__init__(parent=None)
-        self.value = None
+        self.value = NullType.NULL
         self.initializeButtonGroup()
         self.BUTTON_SIZE = QSize(25, 25)
         self.BUTTON_SIZE_LARGE = QSize(55, 25)
@@ -129,6 +129,17 @@ class ButtonGroup(QWidget):
         self.layout.addWidget(unstableButton)
         self.buttons[StabilityType.STABLE] = stableButton
         self.buttons[StabilityType.UNSTABLE] = unstableButton
+
+    def buildGradeSubmitButtonGroup(self, gradeHandler, submitHanlder):
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+        gradeButton = Button("Grade")
+        gradeButton.setMinimumSize(60, 40)
+        submitButton = Button("Submit")
+        submitButton.clicked.connect(submitHanlder)
+        submitButton.setMinimumSize(60, 40)
+        self.layout.addWidget(gradeButton)
+        self.layout.addWidget(submitButton)
 
     def buildButton(self, label, value, isDark=False):
         button = Button(label, isDark)

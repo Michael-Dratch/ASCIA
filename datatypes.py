@@ -1,6 +1,10 @@
 from enum import Enum
 
 
+class NullType(Enum):
+    NULL = 0
+
+
 class MovementType(Enum):
     NONE = 0
     SLIGHT = 1
