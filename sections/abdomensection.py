@@ -1,8 +1,6 @@
-from PyQt6.QtCore import Qt, QRect
-from PyQt6.QtGui import QPainter, QFont
-from PyQt6.QtWidgets import QGraphicsView, QGraphicsScene
 from sections.section import Section
 from buttongroup import ButtonGroup
+from datatypes import NullType
 
 
 class AbdomenSection(Section):
@@ -25,3 +23,8 @@ class AbdomenSection(Section):
 
     def getAbdomen(self):
         return self.abdomenSelector.getValue()
+
+    def isComplete(self):
+        if self.abdomenSelector.getValue() == NullType.NULL:
+            return False
+        return True

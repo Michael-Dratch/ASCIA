@@ -5,6 +5,12 @@ class NullType(Enum):
     NULL = 0
 
 
+class SectionTypes(Enum):
+    EARLY = 0
+    INTERMEDIATE = 1
+    LATE = 2
+
+
 class MovementType(Enum):
     NONE = 0
     SLIGHT = 1

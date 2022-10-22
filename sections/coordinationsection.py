@@ -1,5 +1,6 @@
 from sections.section import Section
 from buttongroup import ButtonGroup
+from datatypes import NullType
 
 
 class CoordinationSection(Section):
@@ -24,3 +25,8 @@ class CoordinationSection(Section):
 
     def getCoordination(self):
         return self.coordinationSelector.getValue()
+
+    def isComplete(self):
+        if self.coordinationSelector.getValue() == NullType.NULL:
+            return False
+        return True

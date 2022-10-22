@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QFrame
 from sections.section import Section
 from buttongroup import ButtonGroup
+from datatypes import NullType
 
 
 class PawPlacementSection(Section):
@@ -8,7 +9,7 @@ class PawPlacementSection(Section):
         super().__init__()
         self.sweepSelector = None
         self.withOutSupportSelector = None
-        self.withSupportSelecor = None
+        self.withSupportSelector = None
         self.layout = None
 
         self.buildSelectors()
@@ -19,8 +20,8 @@ class PawPlacementSection(Section):
         self.sweepSelector.buildLeftRightButtonGroup()
         self.withOutSupportSelector = ButtonGroup()
         self.withOutSupportSelector.buildLeftRightButtonGroup()
-        self.withSupportSelecor = ButtonGroup()
-        self.withSupportSelecor.buildLeftRightButtonGroup()
+        self.withSupportSelector = ButtonGroup()
+        self.withSupportSelector.buildLeftRightButtonGroup()
 
     def buildLayout(self):
         self.initializeLayout()
@@ -38,7 +39,7 @@ class PawPlacementSection(Section):
     def layoutSelectorSection(self):
         self.layout.addWidget(self.sweepSelector, 4, 0, 1, 2)
         self.layout.addWidget(self.withOutSupportSelector, 4, 3, 1, 2)
-        self.layout.addWidget(self.withSupportSelecor, 4, 6, 1, 2)
+        self.layout.addWidget(self.withSupportSelector, 4, 6, 1, 2)
 
     def layoutDividers(self):
         self.layout.addWidget(self.buildVerticalDivider(), 3, 2, 4, 1)
@@ -51,4 +52,13 @@ class PawPlacementSection(Section):
         return self.withOutSupportSelector.getValue()
 
     def getWithSupport(self):
-        return self.withSupportSelecor.getValue()
+        return self.withSupportSelector.getValue()
+
+    def isComplete(self):
+        if self.sweepSelector.getValue() == NullType.NULL:
+            return False
+        if self.withOutSupportSelector.getValue() == NullType.NULL:
+            return False
+        if self.withSupportSelector.getValue() == NullType.NULL:
+            return False
+        return True

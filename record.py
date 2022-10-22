@@ -1,4 +1,4 @@
-class RecordData:
+class Record:
     def __init__(self):
         self.ratNumber = None
         self.week = None

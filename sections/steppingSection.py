@@ -1,5 +1,6 @@
 from sections.section import Section
 from buttongroup import ButtonGroup
+from datatypes import NullType
 
 
 class SteppingSection(Section):
@@ -57,4 +58,14 @@ class SteppingSection(Section):
 
     def getRightPlantar(self):
         return self.rightPlantar.getValue()
-   
+
+    def isComplete(self):
+        if self.leftDorsal.getValue() == NullType.NULL:
+            return False
+        if self.rightDorsal.getValue() == NullType.NULL:
+            return False
+        if self.leftPlantar.getValue() == NullType.NULL:
+            return False
+        if self.rightPlantar.getValue() == NullType.NULL:
+            return False
+        return True

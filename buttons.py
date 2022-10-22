@@ -7,6 +7,7 @@ class Button(QPushButton):
     def __init__(self, label, isDark=False):
         super(Button, self).__init__(label)
         if isDark == False:
+            self.selected = False
             self.unselectedStyle = """
                                     QPushButton {
                                     background-color: #eee
@@ -27,9 +28,14 @@ class Button(QPushButton):
 
         self.selectedStyle = """
                                 QPushButton {
-                                background-color: green
+                                background-color: #22b600
                                 }
                                 """
+        self.secondaryStyle = """
+                                  QPushButton {
+                                  background-color: #3895D3
+                                  }
+                                  """
         self.setStyleSheet(self.unselectedStyle)
         self.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
@@ -38,3 +44,6 @@ class Button(QPushButton):
 
     def setSelectedStyle(self):
         self.setStyleSheet(self.selectedStyle)
+
+    def setSecondaryStyle(self):
+        self.setStyleSheet(self.secondaryStyle)

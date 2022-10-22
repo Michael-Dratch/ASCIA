@@ -1,7 +1,6 @@
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QGridLayout, QLabel, QWidget, QFrame
 from buttongroup import ButtonGroup
 from sections.section import Section
+from datatypes import NullType
 
 
 class TrunkPositionSection(Section):
@@ -44,3 +43,9 @@ class TrunkPositionSection(Section):
     def getProp(self):
         return self.propSelector.getValue()
 
+    def isComplete(self):
+        if self.sideSelector.getValue() == NullType.NULL:
+            return False
+        if self.propSelector.getValue() == NullType.NULL:
+            return False
+        return True

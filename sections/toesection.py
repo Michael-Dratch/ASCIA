@@ -1,5 +1,6 @@
 from sections.section import Section
 from buttongroup import ButtonGroup
+from datatypes import NullType
 
 
 class ToeSection(Section):
@@ -30,3 +31,10 @@ class ToeSection(Section):
 
     def getRightToe(self):
         return self.rightToeSelector.getValue()
+
+    def isComplete(self):
+        if self.leftToeSelector.getValue() == NullType.NULL:
+            return False
+        if self.rightToeSelector.getValue() == NullType.NULL:
+            return False
+        return True

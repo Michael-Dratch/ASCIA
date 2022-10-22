@@ -1,6 +1,6 @@
 from unittest import TestCase
 from grader import Grader
-from recorddata import AnimalData
+from record import AnimalData
 
 
 class BBBTester(TestCase):

@@ -1,5 +1,6 @@
 from buttongroup import ButtonGroup
 from sections.section import Section
+from datatypes import NullType
 
 
 class LimbMovementSection(Section):
@@ -83,3 +84,18 @@ class LimbMovementSection(Section):
 
     def getRightAnkle(self):
         return self.rightAnkleSelector.getValue()
+
+    def isComplete(self):
+        if self.rightKneeSelector.getValue() == NullType.NULL:
+            return False
+        if self.leftKneeSelector.getValue() == NullType.NULL:
+            return False
+        if self.rightAnkleSelector.getValue() == NullType.NULL:
+            return False
+        if self.leftAnkleSelector.getValue() == NullType.NULL:
+            return False
+        if self.rightHipSelector.getValue() == NullType.NULL:
+            return False
+        if self.leftHipSelector.getValue() == NullType.NULL:
+            return False
+        return True
