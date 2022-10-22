@@ -1,5 +1,5 @@
 from sections.section import Section
-from buttongroup import ButtonGroup
+from guicomponents.buttongroup import ButtonGroup
 from datatypes import NullType
 
 

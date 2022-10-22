@@ -1,39 +1,42 @@
+from datatypes import NullType
+
+
 class Record:
     def __init__(self):
-        self.ratNumber = None
-        self.week = None
-        self.date = None
-        self.tester = None
-        self.scoreLeft = None
-        self.scoreRight = None
+        self.ratNumber = NullType.NULL
+        self.week = NullType.NULL
+        self.date = NullType.NULL
+        self.tester = NullType.NULL
+        self.scoreLeft = NullType.NULL
+        self.scoreRight = NullType.NULL
 
-        self.leftHip = None
-        self.leftKnee = None
-        self.leftAnkle = None
-        self.rightHip = None
-        self.rightKnee = None
-        self.rightAnkle = None
-        self.trunkSide = None
-        self.trunkProp = None
-        self.abdomen = None
+        self.leftHip = NullType.NULL
+        self.leftKnee = NullType.NULL
+        self.leftAnkle = NullType.NULL
+        self.rightHip = NullType.NULL
+        self.rightKnee = NullType.NULL
+        self.rightAnkle = NullType.NULL
+        self.trunkSide = NullType.NULL
+        self.trunkProp = NullType.NULL
+        self.abdomen = NullType.NULL
 
-        self.pawSweep = None
-        self.pawWithoutSupp = None
-        self.pawWithSupp = None
-        self.steppingDorsalLeft = None
-        self.steppingPlantarLeft = None
-        self.steppingDorsalRight = None
-        self.steppingPlantarRight = None
+        self.pawSweep = NullType.NULL
+        self.pawWithoutSupp = NullType.NULL
+        self.pawWithSupp = NullType.NULL
+        self.steppingDorsalLeft = NullType.NULL
+        self.steppingPlantarLeft = NullType.NULL
+        self.steppingDorsalRight = NullType.NULL
+        self.steppingPlantarRight = NullType.NULL
 
-        self.coordination = None
-        self.leftToe = None
-        self.rightToe = None
-        self.initialContactLeft = None
-        self.initialContactRight = None
-        self.liftOffLeft = None
-        self.liftOffRight = None
-        self.trunkInstability = None
-        self.tail = None
+        self.coordination = NullType.NULL
+        self.leftToe = NullType.NULL
+        self.rightToe = NullType.NULL
+        self.initialContactLeft = NullType.NULL
+        self.initialContactRight = NullType.NULL
+        self.liftOffLeft = NullType.NULL
+        self.liftOffRight = NullType.NULL
+        self.trunkInstability = NullType.NULL
+        self.tail = NullType.NULL
 
     def toString(self):
         metaData = self.createMetaDataString()

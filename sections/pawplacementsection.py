@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QFrame
 from sections.section import Section
-from buttongroup import ButtonGroup
+from guicomponents.buttongroup import ButtonGroup
 from datatypes import NullType
 
 

@@ -1,4 +1,4 @@
-from buttongroup import ButtonGroup
+from guicomponents.buttongroup import ButtonGroup
 from sections.section import Section
 from datatypes import NullType
 
