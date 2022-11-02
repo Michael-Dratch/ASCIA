@@ -1,4 +1,5 @@
 from datatypes import NullType
+from animalside import AnimalSide
 
 
 class Record:
@@ -20,9 +21,11 @@ class Record:
         self.trunkProp = NullType.NULL
         self.abdomen = NullType.NULL
 
-        self.pawSweep = NullType.NULL
-        self.pawWithoutSupp = NullType.NULL
-        self.pawWithSupp = NullType.NULL
+        self.leftSweep = NullType.NULL
+        self.rightSweep = NullType.NULL
+        self.leftSupport = NullType.NULL
+        self.rightSupport = NullType.NULL
+
         self.steppingDorsalLeft = NullType.NULL
         self.steppingPlantarLeft = NullType.NULL
         self.steppingDorsalRight = NullType.NULL
@@ -37,6 +40,44 @@ class Record:
         self.liftOffRight = NullType.NULL
         self.trunkInstability = NullType.NULL
         self.tail = NullType.NULL
+
+    def getLeftSide(self):
+        leftSide = AnimalSide()
+        leftSide.hip = self.leftHip
+        leftSide.knee = self.leftKnee
+        leftSide.ankle = self.leftAnkle
+        leftSide.sweep = self.leftSweep
+        leftSide.support = self.leftSupport
+        leftSide.steppingDorsal = self.steppingDorsalLeft
+        leftSide.steppingPlantar = self.steppingPlantarLeft
+        leftSide.toe = self.leftToe
+        leftSide.initialContact = self.initialContactLeft
+        leftSide.liftOff = self.liftOffLeft
+        self.setCommonSideData(leftSide)
+        return leftSide
+
+    def getRightSide(self):
+        rightSide = AnimalSide()
+        rightSide.hip = self.rightHip
+        rightSide.knee = self.rightKnee
+        rightSide.ankle = self.rightAnkle
+        rightSide.sweep = self.rightSweep
+        rightSide.support = self.rightSupport
+        rightSide.steppingDorsal = self.steppingDorsalRight
+        rightSide.steppingPlantar = self.steppingPlantarRight
+        rightSide.toe = self.rightToe
+        rightSide.initialContact = self.initialContactRight
+        rightSide.liftOff = self.liftOffRight
+        self.setCommonSideData(rightSide)
+        return rightSide
+
+    def setCommonSideData(self, side):
+        side.trunkSide = self.trunkSide
+        side.trunkProp = self.trunkProp
+        side.abdomen = self.abdomen
+        side.coordination = self.coordination
+        side.trunkInstability = self.trunkInstability
+        side.tail = self.tail
 
     def toString(self):
         metaData = self.createMetaDataString()

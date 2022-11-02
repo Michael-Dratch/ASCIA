@@ -44,6 +44,12 @@ class AbdomenType(Enum):
     HIGH = 2
 
 
+class PlacementType(Enum):
+    SWEEP = 0
+    WITH_OUT_SUPPORT = 1
+    WITH_SUPPORT = 2
+
+
 class StabilityType(Enum):
     STABLE = 0
     UNSTABLE = 1

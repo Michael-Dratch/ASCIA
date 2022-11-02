@@ -7,21 +7,23 @@ from datatypes import NullType
 class PawPlacementSection(Section):
     def __init__(self):
         super().__init__()
-        self.sweepSelector = None
-        self.withOutSupportSelector = None
-        self.withSupportSelector = None
+        self.leftPawPlacementSelector = None
+        self.rightPawPlacementSelector = None
+
         self.layout = None
 
         self.buildSelectors()
         self.buildLayout()
 
     def buildSelectors(self):
-        self.sweepSelector = ButtonGroup()
-        self.sweepSelector.buildLeftRightButtonGroup()
-        self.withOutSupportSelector = ButtonGroup()
-        self.withOutSupportSelector.buildLeftRightButtonGroup()
-        self.withSupportSelector = ButtonGroup()
-        self.withSupportSelector.buildLeftRightButtonGroup()
+        self.leftSweepSelector = ButtonGroup()
+        self.leftSweepSelector.buildSweepButton("L", isDark=True)
+        self.rightSweepSelector = ButtonGroup()
+        self.rightSweepSelector.buildSweepButton("R")
+        self.leftSupportSelector = ButtonGroup()
+        self.leftSupportSelector.buildSupportButtonGroup("L", isDark=True)
+        self.rightSupportSelector = ButtonGroup()
+        self.rightSupportSelector.buildSupportButtonGroup("R")
 
     def buildLayout(self):
         self.initializeLayout()
@@ -37,28 +39,30 @@ class PawPlacementSection(Section):
         self.layout.addWidget(self.buildHeader("W\nSupp."), 3, 6, 1, 2)
 
     def layoutSelectorSection(self):
-        self.layout.addWidget(self.sweepSelector, 4, 0, 1, 2)
-        self.layout.addWidget(self.withOutSupportSelector, 4, 3, 1, 2)
-        self.layout.addWidget(self.withSupportSelector, 4, 6, 1, 2)
+        self.layout.addWidget(self.leftSweepSelector, 4, 0, 1, 1)
+        self.layout.addWidget(self.rightSweepSelector, 4, 1, 1, 1)
+        self.layout.addWidget(self.leftSupportSelector, 4, 2, 1, 6)
+        self.layout.addWidget(self.rightSupportSelector, 5, 2, 1, 6)
 
     def layoutDividers(self):
         self.layout.addWidget(self.buildVerticalDivider(), 3, 2, 4, 1)
         self.layout.addWidget(self.buildVerticalDivider(), 3, 5, 4, 1)
 
-    def getSweep(self):
-        return self.sweepSelector.getValue()
+    def getLeftSweep(self):
+        return self.leftSweepSelector.getValue()
 
-    def getWithOutSupport(self):
-        return self.withOutSupportSelector.getValue()
+    def getRightSweep(self):
+        return self.rightSweepSelector.getValue()
 
-    def getWithSupport(self):
-        return self.withSupportSelector.getValue()
+    def getLeftSupport(self):
+        return self.leftSupportSelector.getValue()
+
+    def getRightSupport(self):
+        return self.rightSupportSelector.getValue()
 
     def isComplete(self):
-        if self.sweepSelector.getValue() == NullType.NULL:
+        if self.leftSupportSelector.getValue() == NullType.NULL:
             return False
-        if self.withOutSupportSelector.getValue() == NullType.NULL:
-            return False
-        if self.withSupportSelector.getValue() == NullType.NULL:
+        if self.rightSupportSelector.getValue() == NullType.NULL:
             return False
         return True

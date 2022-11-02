@@ -1,9 +1,7 @@
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import Qt
-from record import Record
 from guicomponents.buttons import Button
 from guicomponents.buttongroup import ButtonGroup
-from recordbuilder import RecordBuilder
 from datatypes import SectionTypes
 from sections.limbmovementsection import LimbMovementSection
 from sections.trunkpositionsection import TrunkPositionSection
@@ -22,6 +20,9 @@ from sections.key import Key
 class GUI:
 
     def __init__(self, saveDataFunction):
+        self.filePath = ""
+        self.gradeRecordMethod = None
+        self.saveMethod = None
         self.window = None
         self.errorWindow = None
         self.earlySectionActive = True
@@ -36,6 +37,15 @@ class GUI:
             border: 1px solid black
             }
             """
+
+    def setGradeMethod(self, gradeRecordMethod):
+        self.gradeRecordMethod = gradeRecordMethod
+
+    def setSaveMethod(self, saveMethod):
+        self.saveMethod = saveMethod
+
+    def setNewFilePathMethod(self, newFilePath):
+        self.filePath = newFilePath
 
     def start(self):
         app = QApplication([])
@@ -174,10 +184,16 @@ class GUI:
         else:
             self.lateSectionActive = True
 
+    def gradeClicked(self):
+        if self.validateInput():
+            record = self.buildSection()
+            self.gradeRecordMethod(record)
+
     def submitClicked(self):
         if self.validateInput():
             record = self.buildRecordDataObject()
-            self.saveData(record)
+            self.gradeClicked(record)
+            self.saveMethod(record)
 
     def validateInput(self):
         if not self.metaDataSection.isComplete():
@@ -226,11 +242,6 @@ class GUI:
             return False
         return True
 
-    def buildRecordDataObject(self):
-        recordBuilder = RecordBuilder(self)
-        record = recordBuilder.buildRecordDataObject()
-        return record
-
     def showErrorWindow(self, text):
         self.errorWindow = QWidget()
         self.errorWindow.setGeometry(self.window.pos().x() + 300, self.window.pos().y() + 200, 300, 100)
@@ -241,7 +252,8 @@ class GUI:
         layout.addWidget(label)
         self.errorWindow.show()
 
+    def setLeftScore(self, score):
+        pass
 
-if __name__ == "__main__":
-    gui = GUI()
-    gui.start()
+    def setRightScore(self, score):
+        pass

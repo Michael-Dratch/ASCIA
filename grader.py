@@ -1,44 +1,224 @@
+from datatypes import *
+
+
 class Grader:
-    def gradeHindLeg(self, animalData, side):
-        hip = self.getHipMobility(animalData ,side)
-        knee = self.getKneeMobility(animalData, side)
-        ankle = self.getHipMobility(animalData, side)
+    def isPawParallelThroughout(self, side):
+        return (side.initialContact == PositionType.PARALLEL and
+                side.liftOff == PositionType.PARALLEL)
 
-        if self.checkNoObservableHindLimbMovement(hip, knee, ankle):
-            return 0
-        elif self.checkSlightMovementofOneOrTwoJoints(hip, knee, ankle):
-            return 1
-        elif self.checkExtensiveMovementOfOneJoint(hip, knee, ankle):
+    def testDorsalPlantar(self, side, dorsal, plantar):
+        return side.steppingDorsal == dorsal and side.steppingPlantar == plantar
+
+    def isRotated(self, position):
+        return position == PositionType.EXTERNALROTATION or position == PositionType.INTERNALROTATION
+
+    def isPlantarSteppingFrequentOrConsistent(self, side):
+        return side.steppingPlantar == FrequencyType.FREQUENT or side.steppingPlantar == FrequencyType.CONSISTENT
+
+    def isDorsalSteppingAtLeastOccasional(self, side):
+        return (side.steppingDorsal == FrequencyType.OCCASIONAL or
+                side.steppingDorsal == FrequencyType.FREQUENT or
+                side.steppingDorsal == FrequencyType.CONSISTENT)
+
+    def isPlantSteppingAtLeastOccasional(self, side):
+        return (side.steppingPlantar == FrequencyType.OCCASIONAL or
+                side.steppingPlantar == FrequencyType.FREQUENT or
+                side.steppingPlantar == FrequencyType.CONSISTENT)
+
+    def numberExtensiveJoints(self, side):
+        count = 0
+        if side.hip == MovementType.EXTENSIVE:
+            count += 1
+        if side.knee == MovementType.EXTENSIVE:
+            count += 1
+        if side.ankle == MovementType.EXTENSIVE:
+            count += 1
+        return count
+
+    def numberSlightJoints(self, side):
+        count = 0
+        if side.hip == MovementType.SLIGHT:
+            count += 1
+        if side.knee == MovementType.SLIGHT:
+            count += 1
+        if side.ankle == MovementType.SLIGHT:
+            count += 1
+        return count
+
+    def numberNoneJoints(self, side):
+        count = 0
+        if side.hip == MovementType.NONE:
+            count += 1
+        if side.knee == MovementType.NONE:
+            count += 1
+        if side.ankle == MovementType.NONE:
+            count += 1
+        return count
+
+    def grade(self, side):
+        if self.isCase21(side):
+            return 21
+        elif self.isCase20(side):
+            return 20
+        elif self.isCase19(side):
+            return 19
+        elif self.isCase18(side):
+            return 18
+        elif self.isCase17(side):
+            return 17
+        elif self.isCase16(side):
+            return 16
+        elif self.isCase15(side):
+            return 15
+        elif self.isCase14(side):
+            return 14
+        elif self.isCase13(side):
+            return 13
+        elif self.isCase12(side):
+            return 12
+        elif self.isCase11(side):
+            return 11
+        elif self.isCase10(side):
+            return 10
+        elif self.isCase9(side):
+            return 9
+        elif self.isCase8(side):
+            return 8
+        elif self.isCase7(side):
+            return 7
+        elif self.isCase6(side):
+            return 6
+        elif self.isCase5(side):
+            return 5
+        elif self.isCase4(side):
+            return 4
+        elif self.isCase3(side):
+            return 3
+        elif self.isCase2(side):
             return 2
+        elif self.isCase1(side):
+            return 1
+        else:
+            return 0
 
+    def isCase21(self, side):
+        return (side.steppingPlantar == FrequencyType.CONSISTENT and
+                side.coordination == FrequencyType.CONSISTENT and
+                side.toe == FrequencyType.CONSISTENT and
+                self.isPawParallelThroughout(side) and
+                side.trunkInstability == StabilityType.STABLE and
+                side.tail == PositionType.UP)
 
+    def isCase20(self, side):
+        return (side.steppingPlantar == FrequencyType.CONSISTENT and
+                side.coordination == FrequencyType.CONSISTENT and
+                side.toe == FrequencyType.CONSISTENT and
+                self.isPawParallelThroughout(side) and
+                side.trunkInstability == StabilityType.UNSTABLE and
+                side.tail == PositionType.UP)
 
-    def checkNoObservableHindLimbMovement(self, hip, knee, ankle):
-        return  (hip == MovementType.NONE) and (knee == MovementType.NONE) and (ankle == MovementType.NONE)
+    def isCase19(self, side):
+        return (side.steppingPlantar == FrequencyType.CONSISTENT and
+                side.coordination == FrequencyType.CONSISTENT and
+                side.toe == FrequencyType.CONSISTENT and
+                self.isPawParallelThroughout(side) and
+                side.tail == PositionType.DOWN)
 
+    def isCase18(self, side):
+        return (side.steppingPlantar == FrequencyType.CONSISTENT and
+                side.coordination == FrequencyType.CONSISTENT and
+                side.toe == FrequencyType.CONSISTENT and
+                side.initialContact == PositionType.PARALLEL and
+                self.isRotated(side.liftOff)
+                )
 
-    def checkSlightMovementofOneOrTwoJoints(self, hip, knee, ankle):
-        pass
+    def isCase17(self, side):
+        return (side.steppingPlantar == FrequencyType.CONSISTENT and
+                side.coordination == FrequencyType.CONSISTENT and
+                side.toe == FrequencyType.FREQUENT and
+                self.isPawParallelThroughout(side))
 
+    def isCase16(self, side):
+        return (side.steppingPlantar == FrequencyType.CONSISTENT and
+                side.coordination == FrequencyType.CONSISTENT and
+                side.toe == FrequencyType.FREQUENT and
+                side.initialContact == PositionType.PARALLEL and
+                self.isRotated(side.liftOff))
 
+    def isCase15(self, side):
+        return (side.steppingPlantar == FrequencyType.CONSISTENT and
+                side.coordination == FrequencyType.CONSISTENT and
+                side.initialContact == PositionType.PARALLEL and
+                (side.toe == FrequencyType.NEVER or side.toe == FrequencyType.OCCASIONAL))
 
-    # Methods for getting movement value of specific side
-    def getHipMobility(self, animalData, side):
-        if side == "LEFT":
-            return animalData.getLeftHip()
-        if side == "RIGHT":
-            return animalData.getRightHip()
+    def isCase14(self, side):
+        return ((side.steppingPlantar == FrequencyType.CONSISTENT and
+                 side.coordination == FrequencyType.CONSISTENT and
+                 side.support == PlacementType.WITH_SUPPORT and
+                 self.isRotated(side.initialContact) and
+                 self.isRotated(side.liftOff)
+                 ) or (
+                        self.testDorsalPlantar(side, FrequencyType.OCCASIONAL, FrequencyType.FREQUENT) and
+                        side.record.coordination == FrequencyType.CONSISTENT))
 
-    def getKneeMobility(self, animalData, side):
-        if side == "LEFT":
-            return animalData.getLeftKnee()
-        if side == "RIGHT":
-            return animalData.getRightKnee()
+    def isCase13(self, side):
+        return (self.isPlantarSteppingFrequentOrConsistent(side) and
+                side.support == PlacementType.WITH_SUPPORT and
+                side.coordination == FrequencyType.FREQUENT
+                )
 
-    def getAnkleMobility(self, animalData, side):
-        if side == "LEFT":
-            return animalData.getLeftAnkle()
-        if side == "RIGHT":
-            return animalData.getRightAnkle()
+    def isCase12(self, side):
+        return (self.isPlantarSteppingFrequentOrConsistent(side) and
+                side.support == PlacementType.WITH_SUPPORT and
+                side.coordination == FrequencyType.OCCASIONAL
+                )
 
+    def isCase11(self, side):
+        return (self.isPlantarSteppingFrequentOrConsistent(side) and
+                side.support == PlacementType.WITH_SUPPORT and
+                side.coordination == FrequencyType.NEVER)
 
+    def isCase10(self, side):
+        return (side.steppingPlantar == FrequencyType.OCCASIONAL and
+                side.support == PlacementType.WITH_SUPPORT and
+                side.coordination == FrequencyType.NEVER)
+
+    def isCase9(self, side):
+        return (self.isDorsalSteppingAtLeastOccasional(side) and
+                side.support == PlacementType.WITH_SUPPORT and
+                side.steppingPlantar == FrequencyType.NEVER)
+
+    def isCase8(self, side):
+        return ((side.sweep == PlacementType.SWEEP and
+                 side.support == PlacementType.WITH_OUT_SUPPORT) or
+                (self.isPlantSteppingAtLeastOccasional(side) and
+                 side.support == PlacementType.WITH_OUT_SUPPORT)
+                )
+
+    def isCase7(self, side):
+        return (side.hip == MovementType.EXTENSIVE and
+                side.ankle == MovementType.EXTENSIVE and
+                side.knee == MovementType.EXTENSIVE)
+
+    def isCase6(self, side):
+        return (self.numberExtensiveJoints(side) == 2 and
+                self.numberSlightJoints(side) == 1)
+
+    def isCase5(self, side):
+        return (self.numberExtensiveJoints(side) == 1 and
+                self.numberSlightJoints(side) == 2)
+
+    def isCase4(self, side):
+        return self.numberSlightJoints(side) == 3
+
+    def isCase3(self, side):
+        return (self.numberExtensiveJoints(side) == 2 and
+                self.numberNoneJoints(side) == 1)
+
+    def isCase2(self, side):
+        return (self.numberExtensiveJoints(side) == 1 or
+                (self.numberExtensiveJoints(side) == 1 and
+                 self.numberSlightJoints(side) == 1))
+
+    def isCase1(self, side):
+        return self.numberSlightJoints(side) <= 2
