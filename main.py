@@ -1,8 +1,9 @@
-from PyQt6.QtWidgets import QApplication, QWidget
+from PyQt6.QtWidgets import QApplication, QFileDialog
 from grader import Grader
 from excelwriter import ExcelWriter
 from guibuilder import GuiBuilder
 from guicontroller import GuiController
+from filedialogmanager import FileDialogManager
 
 
 class App:
@@ -19,9 +20,12 @@ class App:
         self.guiController = GuiController()
         self.guiController.setGradeHandler(self.gradeRecord)
         self.guiController.setSubmitHandler(self.saveRecord)
+        self.guiController.setUpdateFilePathHandler(self.setFilePath)
         self.guiBuilder = GuiBuilder(self.guiController.gradeClicked,
                                      self.guiController.submitClicked,
-                                     self.guiController.sectionToggleClicked)
+                                     self.guiController.sectionToggleClicked,
+                                     self.guiController.newFileClicked,
+                                     self.guiController.existingFileClicked)
 
     def start(self):
         application = QApplication([])
@@ -39,7 +43,7 @@ class App:
     def saveRecord(self, record):
         self.writer.saveRecord(record)
 
-    def newFilePath(self, filePath):
+    def setFilePath(self, filePath):
         self.writer.setFilePath(filePath)
 
 
