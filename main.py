@@ -1,23 +1,42 @@
+from PyQt6.QtWidgets import QApplication, QWidget
 from gui import GUI
 from grader import Grader
 from excelwriter import ExcelWriter
+from guibuilder import GUIBuilder
+from guicontroller import GUIController
 
 
 class App:
     def __init__(self):
-        self.writer = ExcelWriter()
+        self.writer = None
+        self.grader = None
+        self.guiBuilder = None
+        self.guiController = None
+        self.initializeComponents()
+
+    def initializeComponents(self):
+        self.writer = ExcelWriter("./BBB_Data.xlsx")
         self.grader = Grader()
-        self.gui = GUI()
-        self.gui.setGradeMethod(self.gradeRecord)
-        self.gui.setSaveMethod(self.saveRecord)
-        self.gui.setNewFilePathMethod(self.newFilePath)
+        self.guiController = GUIController()
+        self.guiController.setGradeHandler(self.gradeRecord)
+        self.guiController.setSubmitHandler(self.saveRecord)
+        self.guiBuilder = GUIBuilder(self.guiController.gradeClicked,
+                                     self.guiController.submitClicked,
+                                     self.guiController.sectionToggleClicked)
 
     def start(self):
-        self.gui.start()
+        application = QApplication([])
+        window = QWidget()
+        gui = self.guiBuilder.build(window)
+        self.guiController.setGui(gui)
+        gui.start()
+        application.exec()
 
-    def gradeClicked(self, record):
-        leftScore = Grader.grade(record.getLeftSide())
-        rightScore = Grader.grade(record.getRightSide())
+    def gradeRecord(self, record):
+        leftScore = self.grader.grade(record.getLeftSide())
+        rightScore = self.grader.grade(record.getRightSide())
+        self.guiController.setLeftScore(leftScore)
+        self.guiController.setRightScore(rightScore)
 
     def saveRecord(self, record):
         self.writer.saveRecord(record)
