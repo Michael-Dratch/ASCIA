@@ -1,9 +1,8 @@
 from PyQt6.QtWidgets import QApplication, QWidget
-from gui import GUI
 from grader import Grader
 from excelwriter import ExcelWriter
-from guibuilder import GUIBuilder
-from guicontroller import GUIController
+from guibuilder import GuiBuilder
+from guicontroller import GuiController
 
 
 class App:
@@ -17,17 +16,16 @@ class App:
     def initializeComponents(self):
         self.writer = ExcelWriter("./BBB_Data.xlsx")
         self.grader = Grader()
-        self.guiController = GUIController()
+        self.guiController = GuiController()
         self.guiController.setGradeHandler(self.gradeRecord)
         self.guiController.setSubmitHandler(self.saveRecord)
-        self.guiBuilder = GUIBuilder(self.guiController.gradeClicked,
+        self.guiBuilder = GuiBuilder(self.guiController.gradeClicked,
                                      self.guiController.submitClicked,
                                      self.guiController.sectionToggleClicked)
 
     def start(self):
         application = QApplication([])
-        window = QWidget()
-        gui = self.guiBuilder.build(window)
+        gui = self.guiBuilder.build()
         self.guiController.setGui(gui)
         gui.start()
         application.exec()
