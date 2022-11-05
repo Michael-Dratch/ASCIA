@@ -1,7 +1,8 @@
 class Gui:
     def __init__(self):
-        self.window = None
+        self.mainWindow = None
         self.metaDataSection = None
+        self.filePathView = None
         self.limbMovementSection = None
         self.trunkPositionSection = None
         self.abdomenSection = None
@@ -14,4 +15,4 @@ class Gui:
         self.tailSection = None
 
     def start(self):
-        self.window.show()
+        self.mainWindow.show()

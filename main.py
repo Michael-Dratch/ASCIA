@@ -3,7 +3,6 @@ from grader import Grader
 from excelwriter import ExcelWriter
 from guibuilder import GuiBuilder
 from guicontroller import GuiController
-from filedialogmanager import FileDialogManager
 
 
 class App:
@@ -25,7 +24,7 @@ class App:
                                      self.guiController.submitClicked,
                                      self.guiController.sectionToggleClicked,
                                      self.guiController.newFileClicked,
-                                     self.guiController.existingFileClicked)
+                                     self.guiController.loadFileClicked)
 
     def start(self):
         application = QApplication([])
