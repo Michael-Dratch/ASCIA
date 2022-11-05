@@ -14,7 +14,7 @@ class App:
         self.initializeComponents()
 
     def initializeComponents(self):
-        self.writer = ExcelWriter("./BBB_Data.xlsx")
+        self.writer = ExcelWriter(self.showErrorMessage)
         self.grader = Grader()
         self.guiController = GuiController()
         self.guiController.setGradeHandler(self.gradeRecord)
@@ -44,6 +44,9 @@ class App:
 
     def setFilePath(self, filePath):
         self.writer.setFilePath(filePath)
+
+    def showErrorMessage(self, text):
+        self.guiController.showErrorWindow(text)
 
 
 if __name__ == "__main__":
