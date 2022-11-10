@@ -1,6 +1,9 @@
 from guicomponents.buttongroup import ButtonGroup
 from sections.section import Section
 from datatypes import NullType
+from PyQt6.QtWidgets import QHBoxLayout, QWidget
+from guicomponents.buttongroup import ButtonGroup
+from datatypes import SideType
 
 
 class TrunkPositionSection(Section):
@@ -17,7 +20,7 @@ class TrunkPositionSection(Section):
         self.sideSelector = ButtonGroup()
         self.sideSelector.buildLeftRightMidButtonGroup()
         self.propSelector = ButtonGroup()
-        self.propSelector.buildLeftRightButtonGroup()
+        self.propSelector.buildLeftRightBothButtonGroup()
 
     def createLayout(self):
         self.initializeLayout()
@@ -45,7 +48,5 @@ class TrunkPositionSection(Section):
 
     def isComplete(self):
         if self.sideSelector.getValue() == NullType.NULL:
-            return False
-        if self.propSelector.getValue() == NullType.NULL:
             return False
         return True

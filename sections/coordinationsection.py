@@ -11,8 +11,6 @@ class CoordinationSection(Section):
 
         self.buildSelectors()
         self.buildLayout()
-        self.setMinimumSize(30, 250)
-        self.setMaximumSize(30, 250)
 
     def buildSelectors(self):
         self.coordinationSelector = ButtonGroup()

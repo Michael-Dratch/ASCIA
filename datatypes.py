@@ -21,6 +21,7 @@ class SideType(Enum):
     LEFT = 0
     RIGHT = 1
     MIDDLE = 2
+    BOTH = 3
 
 
 class FrequencyType(Enum):
