@@ -25,6 +25,10 @@ class Grader:
                 side.steppingPlantar == FrequencyType.FREQUENT or
                 side.steppingPlantar == FrequencyType.CONSISTENT)
 
+    def abdomenIsNotDragging(self, side):
+        return (side.abdomen == AbdomenType.PARALLEL or
+                side.abdomen == AbdomenType.HIGH)
+
     def numberExtensiveJoints(self, side):
         count = 0
         if side.hip == MovementType.EXTENSIVE:
@@ -54,6 +58,24 @@ class Grader:
         if side.ankle == MovementType.NONE:
             count += 1
         return count
+
+    def allNullExceptLimbs(self, side):
+        if (side.trunkSide == NullType.NULL and
+                side.trunkProp == NullType.NULL and
+                side.abdomen == NullType.NULL and
+                side.sweep == NullType.NULL and
+                side.support == NullType.NULL and
+                side.steppingDorsal == NullType.NULL and
+                side.steppingPlantar == NullType.NULL and
+                side.coordination == NullType.NULL and
+                side.toe == NullType.NULL and
+                side.initialContact == NullType.NULL and
+                side.liftOff == NullType.NULL and
+                side.trunkInstability == NullType.NULL and
+                side.tail == NullType.NULL):
+            return True
+        else:
+            return False
 
     def grade(self, side):
         if self.isCase0(side):
@@ -208,26 +230,27 @@ class Grader:
 
     def isCase9(self, side):
         print("testing 9")
-
-        return (self.isDorsalSteppingAtLeastOccasional(side) and
-                side.support == PlacementType.WITH_SUPPORT and
-                side.steppingPlantar == FrequencyType.NEVER)
+        case1 = side.steppingPlantar == FrequencyType.OCCASIONAL and side.support == PlacementType.WITH_SUPPORT
+        case2 = self.isDorsalSteppingAtLeastOccasional(side) and (side.steppingPlantar == FrequencyType.NEVER or
+                                                                  side.steppingPlantar == NullType.NULL)
+        return (case1 or case2) and side.coordination == NullType.NULL
 
     def isCase8(self, side):
         print("testing 8")
-
-        return ((side.sweep == PlacementType.SWEEP and
-                 side.support == PlacementType.WITH_OUT_SUPPORT) or
-                (self.isPlantSteppingAtLeastOccasional(side) and
-                 side.support == PlacementType.WITH_OUT_SUPPORT)
-                )
+        result = (side.support == PlacementType.WITH_OUT_SUPPORT and
+                  self.abdomenIsNotDragging(side) and (
+                          side.sweep == PlacementType.SWEEP or
+                          self.isPlantSteppingAtLeastOccasional(side))
+                  )
+        return result
 
     def isCase7(self, side):
         print("testing 7")
 
         return (side.hip == MovementType.EXTENSIVE and
                 side.ankle == MovementType.EXTENSIVE and
-                side.knee == MovementType.EXTENSIVE)
+                side.knee == MovementType.EXTENSIVE and
+                self.allNullExceptLimbs(side))
 
     def isCase6(self, side):
         print("testing 6")

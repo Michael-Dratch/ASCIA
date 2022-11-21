@@ -1,6 +1,6 @@
 from unittest import TestCase
 from grader import Grader
-from record import Record
+from animalside import AnimalSide
 from datatypes import *
 
 
@@ -8,197 +8,385 @@ class BBBTester(TestCase):
 
     def setUp(self):
         self.grader = Grader()
-        self.record = Record()
+        self.side = AnimalSide()
 
-    def setRecordAllNone(self, record):
-        record.leftHip = MovementType.NONE
-        record.rightHip = MovementType.NONE
-        record.leftKnee = MovementType.NONE
-        record.rightKnee = MovementType.NONE
-        record.leftAnkle = MovementType.NONE
-        record.rightAnkle = MovementType.NONE
+    def allJointsExtensive(self, side):
+        side.hip = MovementType.EXTENSIVE
+        side.knee = MovementType.EXTENSIVE
+        side.ankle = MovementType.EXTENSIVE
 
-    def setRecordLatePhaseFullyRecovered(self, record):
-        record.coordination = FrequencyType.CONSISTENT
-        record.leftToe = FrequencyType.CONSISTENT
-        record.rightToe = FrequencyType.CONSISTENT
-        record.initialContactLeft = PositionType.PARALLEL
-        record.initialContactRight = PositionType.PARALLEL
-        record.liftOffLeft = PositionType.PARALLEL
-        record.liftOffRight = PositionType.PARALLEL
-        record.trunkInstability = StabilityType.STABLE
-        record.tail = PositionType.UP
+    def assertGrade(self, side, grade):
+        result = self.grader.grade(side)
+        self.assertEqual(grade, result)
 
-    def setToCase19(self):
-        self.setRecordLatePhaseFullyRecovered(self.record)
-        self.record.trunkInstability = StabilityType.UNSTABLE
-        self.record.tail = PositionType.DOWN
+    def test_nullCase(self):
+        side = AnimalSide()
+        self.assertGrade(side, 0)
 
-    def assertBothSides(self, expected):
-        self.assertLeftSide(expected)
-        self.assertRightSide(expected)
+    def test_case0(self):
+        side = AnimalSide()
+        side.hip = MovementType.NONE
+        side.knee = MovementType.NONE
+        side.ankle = MovementType.NONE
 
-    def assertLeftSide(self, expected):
-        leftSide = self.record.getLeftSide()
-        result = self.grader.grade(leftSide)
-        self.assertEqual(expected, result)
+        self.assertGrade(side, 0)
 
-    def assertRightSide(self, expected):
-        rightSide = self.record.getRightSide()
-        result = self.grader.grade(rightSide)
-        self.assertEqual(expected, result)
+    def test_case1(self):
+        # week7 rat: 519 grader:han
+        side = AnimalSide()
+        side.hip = MovementType.SLIGHT
+        side.knee = MovementType.SLIGHT
+        side.ankle = MovementType.NONE
+        side.trunkSide = SideType.LEFT
+        side.trunkProp = SideType.RIGHT
+        side.abdomen = AbdomenType.PARALLEL
+        side.sweep = SideType.LEFT
+        side.steppingDorsal = FrequencyType.CONSISTENT
 
-    def test_allNulls_0(self):
-        self.assertBothSides(0)
+        self.assertGrade(side, 1)
 
-    def test_case21(self):
-        self.setRecordLatePhaseFullyRecovered(self.record)
-        self.assertBothSides(21)
+    def test_case2(self):
+        side = AnimalSide()
+        side.hip = MovementType.EXTENSIVE
+        side.knee = MovementType.NONE
+        side.ankle = MovementType.NONE
 
-    def test_case20(self):
-        self.setRecordLatePhaseFullyRecovered(self.record)
-        self.record.trunkInstability = StabilityType.UNSTABLE
-        self.assertBothSides(20)
+        self.assertGrade(side, 2)
+        side.knee = MovementType.SLIGHT
+        self.assertGrade(side, 2)
+
+    def test_case3(self):
+        side = AnimalSide()
+        side.hip = MovementType.EXTENSIVE
+        side.knee = MovementType.EXTENSIVE
+        side.ankle = MovementType.NONE
+
+        self.assertGrade(side, 3)
+
+    def test_case4(self):
+        side = AnimalSide()
+        side.hip = MovementType.SLIGHT
+        side.knee = MovementType.SLIGHT
+        side.ankle = MovementType.SLIGHT
+
+        self.assertGrade(side, 4)
+
+    def test_case5(self):
+        # week7 rat: 524 grader:gavin
+        side = AnimalSide()
+        side.hip = MovementType.EXTENSIVE
+        side.knee = MovementType.SLIGHT
+        side.ankle = MovementType.SLIGHT
+        side.trunkSide = SideType.LEFT
+        side.trunkProp = SideType.RIGHT
+        side.abdomen = AbdomenType.PARALLEL
+        side.support = PlacementType.WITH_OUT_SUPPORT
+        side.steppingDorsal = FrequencyType.NEVER
+        side.steppingPlantar = FrequencyType.CONSISTENT
+
+        self.assertGrade(side, 5)
+
+    def test_case6(self):
+        side = AnimalSide()
+        self.allJointsExtensive(side)
+        side.ankle = MovementType.SLIGHT
+
+        side.trunkSide = SideType.MIDDLE
+        side.trunkProp = SideType.BOTH
+        side.abdomen = AbdomenType.PARALLEL
+
+        side.sweep = NullType.NULL
+        side.support = PlacementType.WITH_SUPPORT
+
+        side.steppingDorsal = NullType.NULL
+        side.steppingPlantar = FrequencyType.CONSISTENT
+
+        self.assertGrade(side, 6)
+
+        side.abdomen = AbdomenType.DRAG
+        side.steppingDorsal = FrequencyType.OCCASIONAL
+        side.steppingPlantar = FrequencyType.FREQUENT
+        self.assertGrade(side, 6)
+
+    def test_case7(self):
+        side = AnimalSide()
+        self.allJointsExtensive(side)
+        self.assertGrade(side, 7)
+
+    def test_case8(self):
+        side = AnimalSide()
+        self.allJointsExtensive(side)
+        side.support = PlacementType.WITH_OUT_SUPPORT
+        side.trunkSide = SideType.MIDDLE
+        side.abdomen = AbdomenType.PARALLEL
+        side.sweep = PlacementType.SWEEP
+
+        self.assertGrade(side, 8)
+
+        side.sweep = NullType.NULL
+        side.steppingPlantar = FrequencyType.OCCASIONAL
+        self.assertGrade(side, 8)
+
+    def test_case9(self):
+        side = AnimalSide()
+        self.allJointsExtensive(side)
+        side.trunkSide = SideType.MIDDLE
+        side.trunkProp = SideType.LEFT
+        side.abdomen = AbdomenType.PARALLEL
+        side.support = PlacementType.WITH_SUPPORT
+        side.steppingPlantar = FrequencyType.OCCASIONAL
+
+        self.assertGrade(side, 9)
+
+    def test_case10(self):
+        side = AnimalSide()
+        self.allJointsExtensive(side)
+        side.trunkSide = SideType.MIDDLE
+        side.abdomen = AbdomenType.PARALLEL
+        side.support = PlacementType.WITH_SUPPORT
+        side.steppingPlantar = FrequencyType.OCCASIONAL
+        side.coordination = FrequencyType.NEVER
+
+        self.assertGrade(side, 10)
+
+    def test_case11(self):
+        side = AnimalSide()
+        self.allJointsExtensive(side)
+        side.trunkSide = SideType.MIDDLE
+        side.abdomen = AbdomenType.PARALLEL
+        side.support = PlacementType.WITH_SUPPORT
+        side.steppingPlantar = FrequencyType.FREQUENT
+        side.coordination = FrequencyType.NEVER
+
+        self.assertGrade(side, 11)
+
+        side.steppingPlantar = FrequencyType.CONSISTENT
+        self.assertGrade(side, 11)
+
+    def test_case12(self):
+        side = AnimalSide()
+        side = AnimalSide()
+        self.allJointsExtensive(side)
+        side.trunkSide = SideType.MIDDLE
+        side.abdomen = AbdomenType.PARALLEL
+        side.support = PlacementType.WITH_SUPPORT
+        side.steppingPlantar = FrequencyType.FREQUENT
+        side.coordination = FrequencyType.OCCASIONAL
+
+        self.assertGrade(side, 12)
+
+    def test_case13(self):
+        side = AnimalSide()
+        self.allJointsExtensive(side)
+
+        side.trunkSide = SideType.LEFT
+        side.trunkProp = NullType.NULL
+        side.abdomen = AbdomenType.HIGH
+
+        side.support = PlacementType.WITH_SUPPORT
+
+        side.steppingDorsal = FrequencyType.NEVER
+        side.steppingPlantar = FrequencyType.CONSISTENT
+
+        side.coordination = FrequencyType.FREQUENT
+        side.toe = FrequencyType.FREQUENT
+        side.initialContact = PositionType.EXTERNALROTATION
+        side.liftOff = PositionType.EXTERNALROTATION
+        side.trunkInstability = StabilityType.UNSTABLE
+        side.tail = PositionType.UP
+
+        self.assertGrade(side, 13)
+
+    def test_case14(self):
+        side = AnimalSide()
+        self.allJointsExtensive(side)
+
+        side.trunkSide = SideType.LEFT
+        side.trunkProp = NullType.NULL
+        side.abdomen = AbdomenType.HIGH
+
+        side.support = PlacementType.WITH_SUPPORT
+
+        side.steppingDorsal = FrequencyType.NEVER
+        side.steppingPlantar = FrequencyType.CONSISTENT
+
+        side.coordination = FrequencyType.CONSISTENT
+        side.toe = FrequencyType.FREQUENT
+        side.initialContact = PositionType.EXTERNALROTATION
+        side.liftOff = PositionType.EXTERNALROTATION
+        side.trunkInstability = StabilityType.UNSTABLE
+        side.tail = PositionType.UP
+
+        self.assertGrade(side, 14)
+
+        # side.toe = FrequencyType.CONSISTENT
+        # self.assertGrade(side, 14)
+
+    def test_case15(self):
+        side = AnimalSide()
+        self.allJointsExtensive(side)
+
+        side.trunkSide = SideType.MIDDLE
+        side.trunkProp = SideType.BOTH
+        side.abdomen = AbdomenType.PARALLEL
+
+        side.sweep = NullType.NULL
+        side.support = PlacementType.WITH_SUPPORT
+
+        side.steppingDorsal = FrequencyType.NEVER
+        side.steppingPlantar = FrequencyType.CONSISTENT
+
+        side.coordination = FrequencyType.CONSISTENT
+        side.toe = FrequencyType.NEVER
+        side.initialContact = PositionType.PARALLEL
+        side.liftOff = PositionType.PARALLEL
+        side.trunkInstability = StabilityType.UNSTABLE
+        side.tail = PositionType.UP
+
+        self.assertGrade(side, 15)
+        side.toe = FrequencyType.OCCASIONAL
+        self.assertGrade(side, 15)
+
+    def test_case16(self):
+        side = AnimalSide()
+        self.allJointsExtensive(side)
+
+        side.trunkSide = SideType.MIDDLE
+        side.trunkProp = SideType.BOTH
+        side.abdomen = AbdomenType.HIGH
+
+        side.sweep = NullType.NULL
+        side.support = PlacementType.WITH_SUPPORT
+
+        side.steppingDorsal = FrequencyType.NEVER
+        side.steppingPlantar = FrequencyType.CONSISTENT
+
+        side.coordination = FrequencyType.CONSISTENT
+        side.toe = FrequencyType.FREQUENT
+        side.initialContact = PositionType.PARALLEL
+        side.liftOff = PositionType.INTERNALROTATION
+        side.trunkInstability = StabilityType.UNSTABLE
+        side.tail = PositionType.UP
+
+        result = self.grader.grade(side)
+        self.assertEqual(result, 16)
+
+    def test_case17(self):
+        side = AnimalSide()
+        self.allJointsExtensive(side)
+
+        side.trunkSide = SideType.RIGHT
+        side.trunkProp = NullType.NULL
+        side.abdomen = AbdomenType.PARALLEL
+
+        side.sweep = NullType.NULL
+        side.support = PlacementType.WITH_SUPPORT
+
+        side.steppingDorsal = NullType.NULL
+        side.steppingPlantar = FrequencyType.CONSISTENT
+
+        side.coordination = FrequencyType.CONSISTENT
+        side.toe = FrequencyType.FREQUENT
+        side.initialContact = PositionType.PARALLEL
+        side.liftOff = PositionType.PARALLEL
+        side.trunkInstability = StabilityType.UNSTABLE
+        side.tail = PositionType.UP
+
+        result = self.grader.grade(side)
+        self.assertEqual(result, 17)
+
+    def test_case18(self):
+        side = AnimalSide()
+        self.allJointsExtensive(side)
+
+        side.trunkSide = SideType.MIDDLE
+        side.trunkProp = NullType.NULL
+        side.abdomen = AbdomenType.PARALLEL
+
+        side.sweep = NullType.NULL
+        side.support = PlacementType.WITH_SUPPORT
+
+        side.steppingDorsal = FrequencyType.NEVER
+        side.steppingPlantar = FrequencyType.CONSISTENT
+
+        side.coordination = FrequencyType.CONSISTENT
+        side.toe = FrequencyType.CONSISTENT
+        side.initialContact = PositionType.PARALLEL
+        side.liftOff = PositionType.EXTERNALROTATION
+        side.trunkInstability = StabilityType.STABLE
+        side.tail = PositionType.UP
+
+        self.assertGrade(side, 18)
 
     def test_case19(self):
-        self.setToCase19()
-        self.assertBothSides(19)
+        side = AnimalSide()
+        self.allJointsExtensive(side)
 
-    def test_liftOffExternalRotatedLeft_18(self):
-        self.setToCase19()
-        self.record.liftOffLeft = PositionType.EXTERNALROTATION
-        self.assertLeftSide(18)
-        self.assertRightSide(19)
+        side.trunkSide = SideType.MIDDLE
+        side.trunkProp = SideType.BOTH
+        side.abdomen = AbdomenType.PARALLEL
 
-    def test_liftOffExternalRotatedRight_18(self):
-        self.setToCase19()
-        self.record.liftOffRight = PositionType.EXTERNALROTATION
-        self.assertLeftSide(19)
-        self.assertRightSide(18)
+        side.sweep = NullType.NULL
+        side.support = PlacementType.WITH_SUPPORT
 
-    def test_liftOffInternalRotatedLeft_18(self):
-        self.setToCase19()
-        self.record.liftOffLeft = PositionType.INTERNALROTATION
-        self.assertLeftSide(18)
-        self.assertRightSide(19)
+        side.steppingDorsal = FrequencyType.NEVER
+        side.steppingPlantar = FrequencyType.CONSISTENT
 
-    def test_liftOffInternalRotatedRight_18(self):
-        self.setToCase19()
-        self.record.liftOffRight = PositionType.INTERNALROTATION
-        self.assertLeftSide(19)
-        self.assertRightSide(18)
+        side.coordination = FrequencyType.CONSISTENT
+        side.toe = FrequencyType.CONSISTENT
+        side.initialContact = PositionType.PARALLEL
+        side.liftOff = PositionType.PARALLEL
+        side.trunkInstability = StabilityType.STABLE
+        side.tail = PositionType.DOWN
 
-    def test_frequentToeClearanceLeft(self):
-        self.setToCase19()
-        self.record.leftToe = FrequencyType.FREQUENT
-        self.assertLeftSide(17)
+        result = self.grader.grade(side)
+        self.assertEqual(result, 19)
 
-    def test_frequentToeClearanceRight(self):
-        self.setToCase19()
-        self.record.rightToe = FrequencyType.FREQUENT
-        self.assertRightSide(17)
+    def test_case20(self):
+        side = AnimalSide()
+        self.allJointsExtensive(side)
 
-    def test_left_case16(self):
-        self.record.leftToe = FrequencyType.FREQUENT
-        self.record.liftOffLeft = PositionType.EXTERNALROTATION
-        self.assertLeftSide(16)
+        side.trunkSide = SideType.MIDDLE
+        side.trunkProp = NullType.NULL
+        side.abdomen = AbdomenType.PARALLEL
 
-    def test_right_case16(self):
-        self.record.coordination = FrequencyType.CONSISTENT
-        self.record.rightToe = FrequencyType.FREQUENT
-        self.record.liftOffRight = PositionType.EXTERNALROTATION
-        self.assertRightSide(16)
+        side.sweep = NullType.NULL
+        side.support = PlacementType.WITH_SUPPORT
 
-    def test_NoToeClearanceLeft_case15(self):
-        self.record.coordination = FrequencyType.CONSISTENT
-        self.record.leftToe = FrequencyType.NEVER
-        self.record.initialContactLeft = PositionType.PARALLEL
-        self.assertLeftSide(15)
+        side.steppingDorsal = NullType.NULL
+        side.steppingPlantar = FrequencyType.CONSISTENT
 
-    def test_OccasionalToeClearanceLeft_Case15(self):
-        self.record.coordination = FrequencyType.CONSISTENT
-        self.record.leftToe = FrequencyType.OCCASIONAL
-        self.record.initialContactLeft = PositionType.PARALLEL
-        self.assertLeftSide(15)
+        side.coordination = FrequencyType.CONSISTENT
+        side.toe = FrequencyType.CONSISTENT
+        side.initialContact = PositionType.PARALLEL
+        side.liftOff = PositionType.PARALLEL
+        side.trunkInstability = StabilityType.UNSTABLE
+        side.tail = PositionType.UP
 
-    def test_frequentPlantarStepsAndOccasionalDorsalSteps_Case14(self):
-        self.record.steppingDorsalLeft = FrequencyType.OCCASIONAL
-        self.record.steppingPlantarLeft = FrequencyType.FREQUENT
-        self.record.coordination = FrequencyType.CONSISTENT
+        self.assertGrade(side, 20)
 
-    def test_consistentPlantarStepsAndExtRotatedPaw_Case14(self):
-        self.record.steppingPlantarRight = FrequencyType.CONSISTENT
-        self.record.rightPawPlacement = PlacementType.WITH_SUPPORT
-        self.record.initialContactRight = PositionType.EXTERNALROTATION
-        self.record.liftOffRight = PositionType.EXTERNALROTATION
-        self.assertRightSide(14)
+    def test_case21(self):
+        side = AnimalSide()
+        self.allJointsExtensive(side)
 
-    def test_consistentPlantarStepsAndInternalRotatedPaw_Case14(self):
-        self.record.steppingPlantarRight = FrequencyType.CONSISTENT
-        self.record.rightPawPlacement = PlacementType.WITH_SUPPORT
-        self.record.initialContactRight = PositionType.INTERNALROTATION
-        self.record.liftOffRight = PositionType.INTERNALROTATION
-        self.assertRightSide(14)
+        side.trunkSide = SideType.MIDDLE
+        side.trunkProp = NullType.NULL
+        side.abdomen = AbdomenType.PARALLEL
 
-    def test_FrequentWithSupportPlantarStepsAndFrequentCoordination_Case13(self):
-        self.record.steppingPlantarRight = FrequencyType.FREQUENT
-        self.record.rightPawPlacement = PlacementType.WITH_SUPPORT
-        self.record.coordination = FrequencyType.FREQUENT
-        self.assertRightSide(13)
+        side.sweep = NullType.NULL
+        side.support = PlacementType.WITH_SUPPORT
 
-    def test_ConsistentWithSupportPlantarStepsAndFrequentCoordination_Case13(self):
-        self.record.steppingPlantarRight = FrequencyType.CONSISTENT
-        self.record.rightPawPlacement = PlacementType.WITH_SUPPORT
-        self.record.coordination = FrequencyType.FREQUENT
-        self.assertRightSide(13)
+        side.steppingDorsal = NullType.NULL
+        side.steppingPlantar = FrequencyType.CONSISTENT
 
-    def test_FrequentWithSupportPlantarStepsAndOccasionalCoordination_Case12(self):
-        self.record.steppingPlantarRight = FrequencyType.FREQUENT
-        self.record.rightPawPlacement = PlacementType.WITH_SUPPORT
-        self.record.coordination = FrequencyType.OCCASIONAL
-        self.assertRightSide(12)
+        side.coordination = FrequencyType.CONSISTENT
+        side.toe = FrequencyType.CONSISTENT
+        side.initialContact = PositionType.PARALLEL
+        side.liftOff = PositionType.PARALLEL
+        side.trunkInstability = StabilityType.STABLE
+        side.tail = PositionType.UP
 
-    def test_ConsistentWithSupportPlantarStepsAndOccasionalCoordination_Case12(self):
-        self.record.steppingPlantarRight = FrequencyType.CONSISTENT
-        self.record.rightPawPlacement = PlacementType.WITH_SUPPORT
-        self.record.coordination = FrequencyType.OCCASIONAL
-        self.assertRightSide(12)
-
-    def test_FrequentWithSupportPlantarStepsAndNoCoordination_Case11(self):
-        self.record.steppingPlantarRight = FrequencyType.FREQUENT
-        self.record.rightPawPlacement = PlacementType.WITH_SUPPORT
-        self.record.coordination = FrequencyType.NEVER
-        self.assertRightSide(11)
-
-    def test_ConsistentWithSupportPlantarStepsAndNoCoordination_Case11(self):
-        self.record.steppingPlantarRight = FrequencyType.CONSISTENT
-        self.record.rightPawPlacement = PlacementType.WITH_SUPPORT
-        self.record.coordination = FrequencyType.NEVER
-        self.assertRightSide(11)
-
-    def test_OccasionalWithSupportPlantarStepsAndNoCoordination_Case10(self):
-        self.record.steppingPlantarRight = FrequencyType.OCCASIONAL
-        self.record.rightPawPlacement = PlacementType.WITH_SUPPORT
-        self.record.coordination = FrequencyType.NEVER
-        self.assertRightSide(10)
-
-    def test_OccasionalWithSupportDorsalStepping_Case9(self):
-        self.record.steppingDorsalLeft = FrequencyType.OCCASIONAL
-        self.record.leftPawPlacement = PlacementType.WITH_SUPPORT
-        self.record.steppingPlantarLeft = FrequencyType.NEVER
-        self.assertLeftSide(9)
-
-    def test_FrequentWithSupportDorsalStepping_Case9(self):
-        self.record.steppingDorsalLeft = FrequencyType.FREQUENT
-        self.record.leftPawPlacement = PlacementType.WITH_SUPPORT
-        self.record.steppingPlantarLeft = FrequencyType.NEVER
-        self.assertLeftSide(9)
-
-    def test_ConsistentWithSupportDorsalStepping_Case9(self):
-        self.record.steppingDorsalLeft = FrequencyType.CONSISTENT
-        self.record.leftPawPlacement = PlacementType.WITH_SUPPORT
-        self.record.steppingPlantarLeft = FrequencyType.NEVER
-        self.assertLeftSide(9)
+        self.assertGrade(side, 21)
 
 
 if __name__ == '__main__':
