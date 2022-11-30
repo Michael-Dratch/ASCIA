@@ -88,3 +88,8 @@ class MetaDataSection(QWidget):
         if self.weekInput.text() == "":
             return False
         return True
+
+    def resetSection(self):
+        self.ratNumberInput.setText("")
+        self.leftScore.setText("")
+        self.rightScore.setText("")

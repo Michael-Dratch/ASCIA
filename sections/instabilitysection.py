@@ -15,6 +15,7 @@ class InstabilitySection(Section):
     def buildSelectors(self):
         self.instabilitySelector = ButtonGroup()
         self.instabilitySelector.buildStabilityButtonGroup()
+        self.selectors.append(self.instabilitySelector)
 
     def buildLayout(self):
         self.initializeLayout()

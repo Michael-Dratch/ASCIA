@@ -65,10 +65,8 @@ class GuiBuilder:
     def buildMenuBar(self):
         menuBar = QMenuBar()
         fileMenu = QMenu("File", menuBar)
-        settingsMenu = QMenu("Settings", menuBar)
         menuBar.addMenu(fileMenu)
         self.createFileMenuActions(fileMenu)
-        menuBar.addMenu(settingsMenu)
         return menuBar
 
     def createFileMenuActions(self, fileMenu):

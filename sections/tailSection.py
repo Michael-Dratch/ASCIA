@@ -15,6 +15,7 @@ class TailSection(Section):
     def buildSelectors(self):
         self.tailSelector = ButtonGroup()
         self.tailSelector.buildUpDownButtonGroup()
+        self.selectors.append(self.tailSelector)
 
     def buildLayout(self):
         self.initializeLayout()

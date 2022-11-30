@@ -190,3 +190,7 @@ class ButtonGroup(QWidget):
 
     def getValue(self):
         return self.value
+
+    def reset(self):
+        self.removeButtonHighlights()
+        self.value = NullType.NULL

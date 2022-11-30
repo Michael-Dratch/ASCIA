@@ -24,7 +24,14 @@ class PawPlacementSection(Section):
         self.leftSupportSelector.buildSupportButtonGroup("L", isDark=True)
         self.rightSupportSelector = ButtonGroup()
         self.rightSupportSelector.buildSupportButtonGroup("R")
+        self.addSelectorsToList()
 
+    def addSelectorsToList(self):
+        self.selectors.append(self.leftSweepSelector)
+        self.selectors.append(self.rightSweepSelector)
+        self.selectors.append(self.leftSupportSelector)
+        self.selectors.append(self.rightSupportSelector)
+        
     def buildLayout(self):
         self.initializeLayout()
         self.layoutHeaderSection()

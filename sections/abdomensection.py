@@ -15,6 +15,7 @@ class AbdomenSection(Section):
     def buildSelectors(self):
         self.abdomenSelector = ButtonGroup()
         self.abdomenSelector.buildAbdomenButtonGroup()
+        self.selectors.append(self.abdomenSelector)
 
     def createLayout(self):
         self.initializeLayout()

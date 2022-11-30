@@ -6,6 +6,7 @@ from PyQt6.QtGui import QPainter
 class Section(QFrame):
     def __init__(self):
         super().__init__()
+        self.selectors = []
 
     def initializeLayout(self):
         self.layout = QGridLayout()
@@ -51,6 +52,10 @@ class Section(QFrame):
         label = VerticalLabel(text, isNarrow)
         layout.addWidget(label)
         return labelContainer
+
+    def resetSelectors(self):
+        for selector in self.selectors:
+            selector.reset()
 
 
 class VerticalLabel(QWidget):

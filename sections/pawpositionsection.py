@@ -25,6 +25,13 @@ class PawPositionSection(Section):
         self.leftLiftOffSelector.buildPawPositionButtonGroup(isDark=True)
         self.rightLiftOffSelector = ButtonGroup()
         self.rightLiftOffSelector.buildPawPositionButtonGroup()
+        self.addSelectorsToList()
+
+    def addSelectorsToList(self):
+        self.selectors.append(self.leftInitialContactSelector)
+        self.selectors.append(self.rightInitialContactSelector)
+        self.selectors.append(self.leftLiftOffSelector)
+        self.selectors.append(self.rightLiftOffSelector)
 
     def buildLayout(self):
         self.initializeLayout()

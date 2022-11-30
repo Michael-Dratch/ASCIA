@@ -21,6 +21,7 @@ class LimbMovementSection(Section):
         self.buildHipSelectors()
         self.buildKneeSelectors()
         self.buildAnkleSelectors()
+        self.addSelectorsToList()
 
     def createLayout(self):
         self.initializeLayout()
@@ -66,6 +67,14 @@ class LimbMovementSection(Section):
         self.leftKneeSelector.buildLimbMovementButtonGroup(isDark=True)
         self.rightKneeSelector = ButtonGroup()
         self.rightKneeSelector.buildLimbMovementButtonGroup()
+
+    def addSelectorsToList(self):
+        self.selectors.append(self.leftHipSelector)
+        self.selectors.append(self.rightHipSelector)
+        self.selectors.append(self.leftAnkleSelector)
+        self.selectors.append(self.rightAnkleSelector)
+        self.selectors.append(self.leftKneeSelector)
+        self.selectors.append(self.rightKneeSelector)
 
     def getLeftHip(self):
         return self.leftHipSelector.getValue()

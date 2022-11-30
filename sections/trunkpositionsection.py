@@ -21,6 +21,8 @@ class TrunkPositionSection(Section):
         self.sideSelector.buildLeftRightMidButtonGroup()
         self.propSelector = ButtonGroup()
         self.propSelector.buildLeftRightBothButtonGroup()
+        self.selectors.append(self.sideSelector)
+        self.selectors.append(self.propSelector)
 
     def createLayout(self):
         self.initializeLayout()

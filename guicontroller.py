@@ -67,6 +67,7 @@ class GuiController:
             recordBuilder = RecordBuilder(self.gui)
             record = recordBuilder.buildRecordDataObject()
             self.submitHandler(record)
+            self.resetGUI()
 
     def validateInput(self):
         if not self.gui.metaDataSection.isComplete():
@@ -147,3 +148,17 @@ class GuiController:
         dirPath = result[0]
         self.gui.filePathView.setFilePath(dirPath)
         self.updateFilePathHandler(dirPath)
+
+    def resetGUI(self):
+        gui = self.gui
+        gui.limbMovementSection.resetSelectors()
+        gui.abdomenSection.resetSelectors()
+        gui.coordinationSection.resetSelectors()
+        gui.instabilitySection.resetSelectors()
+        gui.pawPlacementSection.resetSelectors()
+        gui.pawPositionSection.resetSelectors()
+        gui.steppingSection.resetSelectors()
+        gui.tailSection.resetSelectors()
+        gui.toeSection.resetSelectors()
+        gui.trunkPositionSection.resetSelectors()
+        gui.metaDataSection.resetSection()

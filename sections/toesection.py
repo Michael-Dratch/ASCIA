@@ -18,6 +18,8 @@ class ToeSection(Section):
         self.leftToeSelector.buildFrequencyButtonGroup(isDark=True)
         self.rightToeSelector = ButtonGroup()
         self.rightToeSelector.buildFrequencyButtonGroup()
+        self.selectors.append(self.leftToeSelector)
+        self.selectors.append(self.rightToeSelector)
 
     def buildLayout(self):
         self.initializeLayout()

@@ -15,6 +15,7 @@ class CoordinationSection(Section):
     def buildSelectors(self):
         self.coordinationSelector = ButtonGroup()
         self.coordinationSelector.buildFrequencyButtonGroup()
+        self.selectors.append(self.coordinationSelector)
 
     def buildLayout(self):
         self.initializeLayout()

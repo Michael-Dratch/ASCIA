@@ -24,6 +24,13 @@ class SteppingSection(Section):
         self.leftPlantar.buildFrequencyButtonGroup(isDark=True)
         self.rightPlantar = ButtonGroup()
         self.rightPlantar.buildFrequencyButtonGroup()
+        self.addSelectorsToList()
+
+    def addSelectorsToList(self):
+        self.selectors.append(self.leftDorsal)
+        self.selectors.append(self.rightDorsal)
+        self.selectors.append(self.leftPlantar)
+        self.selectors.append(self.rightPlantar)
 
     def buildLayout(self):
         self.initializeLayout()
