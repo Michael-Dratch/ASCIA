@@ -70,9 +70,9 @@ class GuiController:
             self.resetGUI()
 
     def validateInput(self):
-        if not self.gui.metaDataSection.isComplete():
-            self.showErrorWindow("Must complete rat number, week, and date section of form")
-            return False
+        # if not self.gui.metaDataSection.isComplete():
+        #     self.showErrorWindow("Must complete rat number, week, and date section of form")
+        #     return False
         if self.earlySectionActive:
             if not self.isEarlySectionComplete():
                 self.showErrorWindow("Must complete early recovery section")
@@ -86,16 +86,12 @@ class GuiController:
                 self.showErrorWindow("Must complete late recovery section")
                 return False
         # if not self.gui.filePathView.fileSelected:
-        #     self.showErrorWindow("Must select file in file menu")
+        #     self.showErrorWindow("Must select or create excel file for saving data in file menu")
         #     return False
         return True
 
     def isEarlySectionComplete(self):
         if not self.gui.limbMovementSection.isComplete():
-            return False
-        if not self.gui.trunkPositionSection.isComplete():
-            return False
-        if not self.gui.abdomenSection.isComplete():
             return False
         return True
 

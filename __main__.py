@@ -36,8 +36,12 @@ class App:
     def gradeRecord(self, record):
         leftScore = self.grader.grade(record.getLeftSide())
         rightScore = self.grader.grade(record.getRightSide())
-        self.guiController.setLeftScore(leftScore)
-        self.guiController.setRightScore(rightScore)
+        if leftScore == 'Error' or rightScore == 'Error':
+            self.showErrorMessage('Was not able to calculate score from parameters entered. Check inputs and resubmit.')
+            return
+        else:
+            self.guiController.setLeftScore(leftScore)
+            self.guiController.setRightScore(rightScore)
 
     def saveRecord(self, record):
         self.writer.saveRecord(record)

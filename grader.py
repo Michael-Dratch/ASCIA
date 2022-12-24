@@ -59,16 +59,13 @@ class Grader:
             count += 1
         return count
 
-    def allNullExceptLimbs(self, side):
-        if (side.trunkSide == NullType.NULL and
-                side.trunkProp == NullType.NULL and
-                side.abdomen == NullType.NULL and
-                side.sweep == NullType.NULL and
+    def allNullExceptEarlySection(self, side):
+        if (side.sweep == NullType.NULL and
                 side.support == NullType.NULL and
-                side.steppingDorsal == NullType.NULL and
-                side.steppingPlantar == NullType.NULL and
-                side.coordination == NullType.NULL and
-                side.toe == NullType.NULL and
+                (side.steppingDorsal == NullType.NULL or side.steppingDorsal == FrequencyType.NEVER) and
+                (side.steppingPlantar == NullType.NULL or side.steppingPlantar == FrequencyType.NEVER) and
+                (side.coordination == NullType.NULL) or (side.coordination == FrequencyType.NEVER) and
+                (side.toe == NullType.NULL or side.toe == FrequencyType.NEVER) and
                 side.initialContact == NullType.NULL and
                 side.liftOff == NullType.NULL and
                 side.trunkInstability == NullType.NULL and
@@ -120,8 +117,10 @@ class Grader:
             return 19
         elif self.isCase20(side):
             return 20
-        else:
+        elif self.isCase21(side):
             return 21
+        else:
+            return 'Error'
 
     def isCase21(self, side):
         print("testing 21")
@@ -233,7 +232,7 @@ class Grader:
         case1 = side.steppingPlantar == FrequencyType.OCCASIONAL and side.support == PlacementType.WITH_SUPPORT
         case2 = self.isDorsalSteppingAtLeastOccasional(side) and (side.steppingPlantar == FrequencyType.NEVER or
                                                                   side.steppingPlantar == NullType.NULL)
-        return (case1 or case2) and side.coordination == NullType.NULL
+        return (case1 or case2) and (side.coordination == NullType.NULL or side.coordination == FrequencyType.NEVER)
 
     def isCase8(self, side):
         print("testing 8")
@@ -250,7 +249,7 @@ class Grader:
         return (side.hip == MovementType.EXTENSIVE and
                 side.ankle == MovementType.EXTENSIVE and
                 side.knee == MovementType.EXTENSIVE and
-                self.allNullExceptLimbs(side))
+                self.allNullExceptEarlySection(side))
 
     def isCase6(self, side):
         print("testing 6")
