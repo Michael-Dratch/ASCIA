@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import *
-from PyQt6.QtGui import QAction
+from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtCore import Qt
 from guicomponents.buttons import Button
 from guicomponents.buttongroup import ButtonGroup
@@ -50,12 +50,13 @@ class GuiBuilder:
     def build(self):
         gui = Gui()
         mainWindow = QMainWindow()
+        mainWindow.setWindowTitle("ASCIA")
+        mainWindow.setWindowIcon(QIcon("images/rat_small.PNG"))
         window = QWidget()
         mainWindow.setCentralWidget(window)
         window.setStyleSheet(self.styleSheet)
         window.setGeometry(int(600 - self.width / 2), int(400 - self.height / 2),
                            self.width, self.height)
-        window.setWindowTitle("BBB Locomotor Rating Scale Grader")
         mainWindow.setMenuWidget(self.buildMenuBar())
         self.buildMainLayout(window)
         gui.mainWindow = mainWindow

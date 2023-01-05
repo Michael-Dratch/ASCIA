@@ -228,14 +228,12 @@ class Grader:
                 side.coordination == FrequencyType.NEVER)
 
     def isCase9(self, side):
-        print("testing 9")
         case1 = side.steppingPlantar == FrequencyType.OCCASIONAL and side.support == PlacementType.WITH_SUPPORT
         case2 = self.isDorsalSteppingAtLeastOccasional(side) and (side.steppingPlantar == FrequencyType.NEVER or
                                                                   side.steppingPlantar == NullType.NULL)
         return (case1 or case2) and (side.coordination == NullType.NULL or side.coordination == FrequencyType.NEVER)
 
     def isCase8(self, side):
-        print("testing 8")
         result = (side.support == PlacementType.WITH_OUT_SUPPORT and
                   self.abdomenIsNotDragging(side) and (
                           side.sweep == PlacementType.SWEEP or
@@ -244,15 +242,12 @@ class Grader:
         return result
 
     def isCase7(self, side):
-        print("testing 7")
-
         return (side.hip == MovementType.EXTENSIVE and
                 side.ankle == MovementType.EXTENSIVE and
                 side.knee == MovementType.EXTENSIVE and
                 self.allNullExceptEarlySection(side))
 
     def isCase6(self, side):
-        print("testing 6")
         return (self.numberExtensiveJoints(side) == 2 and
                 self.numberSlightJoints(side) == 1)
 
